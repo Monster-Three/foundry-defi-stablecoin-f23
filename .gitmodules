@@ -7,5 +7,5 @@
 	url = https://github.com/foundry-rs/forge-std.git
 
 [submodule "lib/openzeppelin-contracts"]
-    path = lib/openzeppelin-openzeppelin-contracts
-    url = https://github.com/OpenZeppelin/openzeppelin-contracts.git 
+	path = lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git
