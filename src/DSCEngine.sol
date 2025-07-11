@@ -29,7 +29,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol"; //IERC20�
 /* IERC20 是一个 接口（Interface）。它定义了 ERC-20 代币标准所必须实现的所有函数签名（函数名称、参数类型、返回类型）。
 ERC20（通常指的是 OpenZeppelin 库中的 ERC20.sol）是一个 具体实现（Implementation）。它是一个完整的、可部署的智能合约，
 包含了所有 ERC-20 标准的函数逻辑以及状态变量（如 _balances mapping）。 */
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import {Oracle} from "./LIibraries/Oraclelib.sol";
 
 /**
