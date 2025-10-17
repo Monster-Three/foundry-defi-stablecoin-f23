@@ -10,7 +10,7 @@ contract DeployDSC is Script {
     address[] public tokenAddresses;
     address[] public priceFeedAddresses;
 
-    //为什么要加一个HelperConfig？ /* 为了在DSCEngine.t.sol中调用HelperConfig */
+    //为什么要加一个HelperConfig？ /* 为了在DSCEngine.t.sol中调用HelperConfig里面的内容 */
     function run() external returns (DecentralizedStableCoin, DSCEngine, HelperConfig) {
         HelperConfig config = new HelperConfig();
 

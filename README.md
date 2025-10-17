@@ -1,18 +1,106 @@
-1. Relative Stability: Anchored or Pagged -> $1.00
-   1. Chainlink Price Feed
-   2. Set a function to exchange ETH & BTC -> $$$
-2. Stability Mechanism (Minting): Algorithmic (Decentralized)
-   1. People can only mint the stablecoin with enough collateral (coded)
-3. Collateral: Exogenous (Crypto)
-   1. wETH
-   2. wBTC
+💰 Foundry DeFi Stablecoin Project (foundry-defi-stablecoin-f23)
 
-# 相比于教学视频改进的地方
-DSCEngine.sol的代码测试覆盖率：98.23% (111/113) | 98.13% (105/107) | 90.91% (10/11) | 100.00% (29/29)
-DecentralizedStableCoin.sol的代码测试覆盖率：100.00% (14/14)  | 100.00% (13/13)  | 100.00% (4/4)  | 100.00% (2/2)
+This repository contains a decentralized, collateral-backed stablecoin protocol built using the Foundry development framework.
 
-# 注释
-我在代码中添加了很多注释，以注明代码中我不理解的地方，同时也为这些问题添加了详细的解释。
+🎯 Core Design and Stability Mechanisms
 
-# 感谢
-感谢Patrick和Gemini，你们在我的这段学习中提供了莫大的帮助。
+This system's design is based on the following principles:
+
+Relative Stability: Pegged/Anchored -> $1.00
+
+Chainlink Price Feed is used for accurate collateral valuation.
+
+Functionality to exchange ETH & BTC is included (Future Feature).
+
+Stability Mechanism (Minting): Algorithmic (Decentralized)
+
+Minting is only possible with sufficient collateral (Coded mechanism).
+
+Collateral: Exogenous (Crypto)
+
+Wrapped Ether (wETH)
+
+Wrapped Bitcoin (wBTC)
+
+🛠 Tech Stack and Environment
+
+Language: Solidity
+
+Framework: Foundry (Forge & Cast)
+
+Dependencies: Git Submodules
+
+🚀 Quick Start
+
+Prerequisites
+
+Git
+
+Foundry: Install forge and cast via the official Foundry documentation.
+
+Installation and Setup
+
+Clone the repository:
+
+git clone [https://github.com/Monster-Three/foundry-defi-stablecoin-f23.git](https://github.com/Monster-Three/foundry-defi-stablecoin-f23.git)
+cd foundry-defi-stablecoin-f23
+
+
+Install Dependencies:
+
+forge install
+
+
+Build the project:
+
+forge build
+
+
+🧪 Testing and Coverage
+
+Running Tests
+
+forge test
+
+
+Improvements Over Learning Material
+
+The project maintains exceptionally high test coverage:
+
+DSCEngine.sol Code Coverage: 98.23% (111/113) | 98.13% (105/107) | 90.91% (10/11) | 100.00% (29/29)
+
+DecentralizedStableCoin.sol Code Coverage: 100.00% (14/14) | 100.00% (13/13) | 100.00% (4/4) | 100.00% (2/2)
+
+Code Comments
+
+I added extensive comments to highlight areas I struggled with and provided detailed explanations for the solutions.
+
+📜 Project Structure
+
+Directory/File
+
+Description
+
+src/
+
+Core smart contracts.
+
+test/
+
+All Foundry test files.
+
+script/
+
+Deployment and interaction scripts.
+
+lib/
+
+External dependencies (e.g., Chainlink).
+
+foundry.toml
+
+Foundry configuration file.
+
+Acknowledgements
+
+Special thanks to Patrick and Gemini for providing tremendous help during this learning journey.

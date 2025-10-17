@@ -132,13 +132,8 @@ contract DSCEngine is ReentrancyGuard {
             s_collateralTokens.push(tokenAddresses[i]);
         }
         i_dsc = DecentralizedStableCoin(dscAddress);
-        /* DecentralizedStableCoin(...) 告诉 Solidity 编译器：在 dscAddress 这个地址上，
-        部署了一个 DecentralizedStableCoin 类型的合约,通过这种方式，
-        Solidity 编译器就知道如何在该地址上调用 DecentralizedStableCoin 合约所定义的公共（public）和外部（external）函数。*/
-        /* 这行代码的目的是在 DSCEngine 合约被部署时，
-        将其内部的一个状态变量 i_dsc 初始化为一个指向已部署的 DecentralizedStableCoin (DSC) 代币合约的引用。
-        这样，DSCEngine 合约就能够直接与 DSC 代币合约进行通信，例如，当用户存入抵押品后，
-        DSCEngine 可以调用 i_dsc.mint() 来铸造 DSC 代币给用户。 */
+        /* 因为他只是将一个地址类型的dscAddress转换成DecentralizedStableCoin类型的变量，
+        好调用dscAddress（也就是decentralizedstablecoin.sol）里面的函数 */
     }
 
     ///////////////////////////
@@ -402,7 +397,7 @@ contract DSCEngine is ReentrancyGuard {
 
         // priceFeed怎么能调用staleCheckLatesRoundData()函数呢？priceFeed是AggregatorV3Interface类型的变量，它与library Oracle在表面上没有关系
         /* 这里的魔术在于 Solidity 的一个特殊语法：using A for B;。
-        using A for B;：给类型注入库函数
+        using A for B;：给B类型注入库函数
         在 Solidity 中，当你看到这样的语句：
         using Oracle for AggregatorV3Interface;
         这意味着你将 Oracle 库中的所有（或部分）函数绑定到了 AggregatorV3Interface 这个类型上。

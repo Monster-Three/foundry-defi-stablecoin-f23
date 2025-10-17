@@ -79,6 +79,66 @@ contract HelperConfig is Script {
         如果其中任何一个模拟合约的部署失败（例如，因为内存不足或其他 Solidity 错误），整个 vm.startBroadcast() 块的交易都会回滚，
         那么 activeNetworkConfig 结构体中的任何字段都不会被赋值为有效的非零地址。它会保持其默认的 address(0) 状态。
         因此，这个 if 条件仍然会判断为假，从而再次尝试完整的部署流程。 */
+
+        //我还不是很懂这段检查的意义，为什么getSepoliaConfig函数里面没有这段检查呢？
+        /*
+        这个 if 语句为本地 Anvil 开发提供了一种优化和一种**“单例”模式**。
+        1. “单例”模式： HelperConfig 合约继承了 Script，它被设计用来模拟交易。如果你有多个脚本或测试需要获取 Anvil 上的网络配置，
+        你可能会多次调用 getOrCreatAnvilEthConfig()。
+        2.避免重复部署： 这里的核心思想是防止在单次测试运行或脚本执行中，重复部署模拟合约（例如 MockV3Aggregator 和 ERC20Mock）。
+        第一次调用 getOrCreatAnvilEthConfig() 时，activeNetworkConfig.wethUsdPriceFeed 将是它的默认零值（address(0)）。
+        此时 if 条件 activeNetworkConfig.wethUsdPriceFeed != address(0) 为 false。
+        代码会继续执行，部署模拟合约（在 vm.startBroadcast() 和 vm.stopBroadcast() 之间），然后将这些合约的地址赋值给 activeNetworkConfig。
+        在同一次脚本执行中，如果后续再次调用 getOrCreatAnvilEthConfig()，activeNetworkConfig.wethUsdPriceFeed 将不再是 address(0)。
+        它将保存已经部署的模拟价格喂价的地址。
+        此时 if 条件将变为 true，函数会立即 return activeNetworkConfig，从而有效地跳过模拟合约的部署步骤。
+        这使得你的本地测试和脚本运行更加高效，因为它不会浪费 Gas 和时间在重新部署那些在当前模拟环境中已经可用的模拟合约上。
+         */
+        //为什么 getSepoliaConfig() 没有这个检查？
+        /* 
+        现在，我们来看看 getSepoliaConfig()：
+        function getSepoliaConfig() public view returns (NetworkConfig memory) {
+            return NetworkConfig({
+                wethUsdPriceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306, // Sepolia 上的真实地址
+                wbtcUsdPriceFeed: 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43, // Sepolia 上的真实地址
+                // ... 其他真实地址 ...
+            });
+        }
+        这个函数不需要这种检查，原因如下：
+        1.静态、已知地址： getSepoliaConfig() 中使用的地址是硬编码的、真实的，
+        并且已经部署在 Sepolia 测试网（如果你使用的是主网，那也是主网上的真实地址）。它们不是由你的脚本部署的。
+        2.没有部署开销： 由于没有部署新的合约，所以通过检查它们是否已经“创建”来提高效率是没有任何意义的。
+        这个函数只是简单地返回一个填充了这些固定地址的 NetworkConfig 结构体。
+        3.只读功能： 注意 getSepoliaConfig() 被标记为 view，这意味着它只读取状态而不修改它。
+        而 getOrCreatAnvilEthConfig() 必须是 public（不能是 view），因为它通过 vm.startBroadcast() 确实修改了区块链状态，
+        部署了模拟合约。
+        本质上，getOrCreatAnvilEthConfig() 处理的是测试环境中动态、即时创建的依赖项，
+        而 getSepoliaConfig() 提供的是公共网络上已有的、永久依赖项的静态引用。只有在你可能重复创建某个对象时，才需要进行检查。
+         */
+
+        /*
+        总结：
+        因为这些部署语句：
+        vm.startBroadcast();
+         MockV3Aggregator ethUsdPriceFeed = new MockV3Aggregator(DECIMALS, ETH_USD_PRICE);
+         ERC20Mock wethMock = new ERC20Mock("WETH", "WETH", msg.sender, 1000e8);
+         MockV3Aggregator btcUsdPriceFeed = new MockV3Aggregator(DECIMALS, BTC_USD_PRICE);
+         ERC20Mock wbtcMock = new ERC20Mock("WBTC", "WBTC", msg.sender, 1000e8);
+         vm.stopBroadcast();
+        他就有可能重新部署ethUsdPriceFeed、btcUsdPriceFeed、wethMock、wbtcMock。
+        所以才需要加一个if语句：
+        if (activeNetworkConfig.wethUsdPriceFeed != address(0)) {
+        return activeNetworkConfig;
+        }
+        但是反过来说，
+        vm.startBroadcast();
+         MockV3Aggregator ethUsdPriceFeed = new MockV3Aggregator(DECIMALS, ETH_USD_PRICE);
+         ERC20Mock wethMock = new ERC20Mock("WETH", "WETH", msg.sender, 1000e8);
+         MockV3Aggregator btcUsdPriceFeed = new MockV3Aggregator(DECIMALS, BTC_USD_PRICE);
+         ERC20Mock wbtcMock = new ERC20Mock("WBTC", "WBTC", msg.sender, 1000e8);
+         vm.stopBroadcast();
+        这些broadcast里面的内容，又是部署ethUsdPriceFeed、btcUsdPriceFeed、wethMock、wbtcMock的必要步骤。
+         */
         if (activeNetworkConfig.wethUsdPriceFeed != address(0)) {
             return activeNetworkConfig;
         }

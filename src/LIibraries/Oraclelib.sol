@@ -14,6 +14,9 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
  */
 
 //库函数的作用？
+/**
+ * 见DSCEngine里面的getTokenAmountFromUsd函数，里面有完整的解释.
+ */
 library Oracle {
     error Oraclelib__StalePrice();
 
